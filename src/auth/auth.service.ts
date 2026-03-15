@@ -22,4 +22,8 @@ export class AuthService {
       access_token: await this.jwtService.signAsync(payload),
     };
   }
+
+  async signUp(username: string, pass: string): Promise<any> {
+    await this.usersService.insertUser(username, pass);
+  }
 }
