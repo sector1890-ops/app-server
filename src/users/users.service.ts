@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import { Injectable } from '@nestjs/common';
 
 export interface User {
@@ -11,7 +10,7 @@ export interface User {
 
 @Injectable()
 export class UsersService {
-  private readonly users = [
+  private users = [
     {
       userId: '1f5d72f6-9985-4c04-b264-9cddb8f65878',
       username: 'john',
@@ -41,6 +40,7 @@ export class UsersService {
   }
 
   async insertUser(username: string, password: string) {
+    const { v4: uuidv4 } = await import('uuid');
     const id = uuidv4();
     const insertedUser = {
       userId: id,
@@ -51,5 +51,10 @@ export class UsersService {
     };
 
     this.users.push(insertedUser);
+  }
+
+  async deleteUserById(id: string): Promise<string | undefined> {
+    this.users = this.users.filter((user) => user.userId !== id);
+    return id;
   }
 }
