@@ -1,4 +1,8 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  UnauthorizedException,
+  ConflictException,
+} from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 
@@ -24,6 +28,24 @@ export class AuthService {
   }
 
   async signUp(username: string, pass: string): Promise<any> {
-    await this.usersService.insertUser(username, pass);
+    if (!pass) {
+      throw new UnauthorizedException();
+    }
+
+    const usernames = (await this.usersService.findAll()).map(
+      (user) => user.username,
+    );
+
+    if (usernames.includes(username)) {
+      throw new ConflictException(`User ${username} already exists`);
+    }
+
+    const user = await this.usersService.insertUser(username, pass);
+
+    const payload = { sub: user.userId, username: user.username };
+
+    return {
+      access_token: await this.jwtService.signAsync(payload),
+    };
   }
 }

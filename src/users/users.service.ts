@@ -51,6 +51,8 @@ export class UsersService {
     };
 
     this.users.push(insertedUser);
+
+    return insertedUser;
   }
 
   async deleteUserById(id: string): Promise<string | undefined> {

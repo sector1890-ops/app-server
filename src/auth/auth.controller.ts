@@ -25,4 +25,11 @@ export class AuthController {
   getProfile(@Request() req) {
     return req.user;
   }
+
+  @Public()
+  @HttpCode(HttpStatus.OK)
+  @Post('signup')
+  signUp(@Body() signInDto: Record<string, any>) {
+    return this.authService.signUp(signInDto.username, signInDto.password);
+  }
 }
