@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { Role } from 'src/roles/role.enum';
 
 export interface User {
   userId: string;
@@ -6,6 +7,7 @@ export interface User {
   password: string;
   createdAt: Date;
   updatedAt: Date;
+  roles: Role[];
 }
 
 @Injectable()
@@ -17,6 +19,7 @@ export class UsersService {
       password: 'changeme',
       createdAt: new Date(),
       updatedAt: new Date(),
+      roles: [Role.Admin],
     },
     {
       userId: 'b876c2b1-ca92-4f49-b827-a4dadb058ef8',
@@ -24,8 +27,9 @@ export class UsersService {
       password: 'guess',
       createdAt: new Date(),
       updatedAt: new Date(),
+      roles: [Role.Admin],
     },
-  ] satisfies User[];
+  ] as User[];
 
   async findOne(username: string): Promise<User | undefined> {
     return this.users.find((user) => user.username === username);
@@ -48,6 +52,7 @@ export class UsersService {
       password,
       createdAt: new Date(),
       updatedAt: new Date(),
+      roles: [Role.User],
     };
 
     this.users.push(insertedUser);
